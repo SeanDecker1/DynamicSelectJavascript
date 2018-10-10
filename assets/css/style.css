@@ -1,0 +1,38 @@
+#container {
+    
+    text-align: center;
+    
+}
+
+.comicChoices {
+    
+    height: 150px;
+    width: 225px;
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block; 
+    
+}
+
+.heroChoices {
+    
+    height: 100px;
+    width: 150px;
+    padding: 15px;
+    margin-top: 3%;
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+    transition-timing-function: ease-in;
+    
+}
+
+.villainChoices {
+    
+    height: 100px;
+    width: 100px;
+    padding: 15px;
+    margin-top: 5%;
+    
+}
