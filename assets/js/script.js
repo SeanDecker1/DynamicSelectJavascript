@@ -1,79 +1,119 @@
 var windowW = window.innerWidth;
 var windowHalf = windowW / 2;
 
+var messageList = JSON.parse( messages );
+var topData = JSON.parse( topSelect );
+
+var midLeftData = JSON.parse( midLeftSelect );
+var midRightData = JSON.parse( midRightSelect );
+
+var botLeftAData = JSON.parse( botLeftA );
+var botLeftBData = JSON.parse( botLeftB );
+var botLeftCData = JSON.parse( botLeftC );
+var botLeftDData = JSON.parse( botLeftD );
+
+var botRightAData = JSON.parse( botRightA );
+var botRightBData = JSON.parse( botRightB );
+var botRightCData = JSON.parse( botRightC );
+var botRightDData = JSON.parse( botRightD );
+
+var currentArray;
+var currentDirection;
+
 // BEGINS PAGE LAYOUT FUNCTION
 window.onload = function() {
-    
+
     // Creates the overall container, and saves it to a variable
     createContainerDiv( "container" );
     var containerDiv = document.getElementById( "container" );
     
     // Creates a div for the first selection stage, adds it to the container
-    createDiv( "stage1", containerDiv );
+    createDiv( "topSelection", containerDiv );
     
     // Creates an H1 element and adds it to the comic selection
-    createHeading( "headingStage1", "stage1", "Favorite Comicbook Universe?", "H1" );
+    createHeading( "headingTopSelection", "topSelection", messageList[0].topMessage, "H1" );
 
-    // Creates the DC image and adds it to the comic selection
+    // Creates the two top images
     // Onclick calls SELECT FUNCTION
-    createImage( "dcImage", "assets/images/comicLogos/dcLogo.png", "selectDC()", "comicChoices", "stage1" );
+    for( var i = 0; i < topData.length; i++ ) {
+        createImage( topData[i].topID, topData[i].topPath, "topChoices", "topSelection" );
+    }
 
-    // Creates the Marvel image and adds it to the comic selection
-    // Onclick calls SELECT FUNCTION
-    createImage( "marvelImage", "assets/images/comicLogos/marvelLogo.png", "selectMarvel()", "comicChoices", "stage1" );
-    
-    // Creates a div for the second selection stage
-    createDiv( "stage2", containerDiv );
-    
-    // Creates a div for the third selection stage
-    createDiv( "stage3", containerDiv );
-    
-}
-// ENDS PAGE LAYOUT FUNCTION
-
-// BEGINS SELECT FUNCTIONS
-// Function to move Marvel off screen and call a DISPLAY HERO FUNCTION
-function selectDC() {
-    
-    // Gets the Marvel and DC image element
-    var inputMarvel = document.getElementById( "marvelImage" );
-    var inputDC = document.getElementById( "dcImage" );
-    
-    // Calls ANIMATION FUNCTION to move the Marvel image to the right
-    moveComic( "right", inputMarvel, inputDC );
-    
-    // Removes onclick functionality from the images 
-    inputDC.onclick = "";
-    inputMarvel.onclick = "";
-    
-    // Calls DISPLAY HERO FUNCTION
-    displayDCHeroes();
+    // Creates a div for the select list
+    createDiv( "topSelectionList", containerDiv );
+    createSelect( "topList", "topSelectionList", topData, "selectOption()");
     
 }
 
-// Function to move DC off screen and call a DISPLAY HERO FUNCTION
-function selectMarvel() {
-    
-    // Gets the Marvel and DC image element
-    var inputMarvel = document.getElementById( "marvelImage" );
-    var inputDC = document.getElementById( "dcImage" );
-    
-    // Calls ANIMATION FUNCTION to move DC image to the left
-    moveComic( "left", inputMarvel, inputDC );
-    
-    // Removes onclick functionality from the images
-    inputDC.onclick = "";
-    inputMarvel.onclick = "";
-    
-    // Calls DISPLAY HERO FUNCTION
-    displayMarvelHeroes();
-    
-}
-// ENDS SELECT FUNCTIONS
+// Function to move the corresponding image off the screen
+function selectOption() {
+        
+    // Gets the two image elements
+    var inputLeft  = document.getElementById( topData[0].topID );
+    var inputRight = document.getElementById( topData[1].topID );
 
-// BEGINS CREATE ELEMENT FUNCTIONS
+    var inputOption = document.getElementById( "topList" ).value;
+
+    if ( inputOption == topData[0].text ) {
+        var inputDirection = "right";
+    } else if ( inputOption == topData[1].text ) {
+        var inputDirection = "left";
+    }
+    
+    // Calls ANIMATION FUNCTION to move the right image to the right
+    moveComic( inputDirection, inputRight, inputLeft );
+
+    displayMidOptions( inputDirection );
+
+}
+
+function selectMidOption() {
+
+    var inputA = document.getElementById( currentArray[0].midID );
+    var inputB = document.getElementById( currentArray[1].midID );
+    var inputC = document.getElementById( currentArray[2].midID );
+    var inputD = document.getElementById( currentArray[3].midID );
+
+    var inputOption = document.getElementById( "midList" ).value;
+
+    if ( inputOption == currentArray[0].text ) {
+        var inputLetter = "A";
+    } else if ( inputOption == currentArray[1].text ) {
+        var inputLetter = "B";
+    } else if ( inputOption == currentArray[2].text ) {
+        var inputLetter = "C"; 
+    } else if ( inputOption == currentArray[3].text ) {
+        var inputLetter = "D";
+    }
+    
+    // Calls ANIMATION FUNCTION to move the right image to the right
+    //moveMid( inputDirection, inputRight, inputLeft );
+
+    displayBotOptions( inputLetter );
+
+}
+
+function selectBotOption() {
+
+    var inputOption = document.getElementById( "botList" ).value;
+
+    var divElement = document.getElementById( "container" );
+
+    var element = document.createElement( "BUTTON" );
+    element.setAttribute( "method", "post" );
+    element.setAttribute( "type", "submit" );
+    element.setAttribute( "value", "submit" );
+    element.setAttribute( "onclick", "return displayFinal( this )" );
+    element.setAttribute( "class", "submitButton" );
+    element.setAttribute( "name", "selectListForm" );
+
+    element.appendChild( document.createTextNode( "Submit" ) );
+
+    divElement.appendChild( element );
+}
+
 // Function to create an image element with an id, source, onclick, and class attribute 
-function createImage( imageID, imageSRC, imageClick, imageClass, imageDiv ) { 
+function createImage( imageID, imageSRC, imageClass, imageDiv ) { 
 
     // Gets the div the image will be added to
     var divElement = document.getElementById( imageDiv );
@@ -82,9 +122,7 @@ function createImage( imageID, imageSRC, imageClick, imageClass, imageDiv ) {
     var element = document.createElement( "IMG" );
     element.setAttribute( "id", imageID );
     element.setAttribute( "src", imageSRC );
-    element.setAttribute( "onclick", imageClick );
     element.setAttribute( "class", imageClass );
-    
     
     // Adds the element to the div
     divElement.appendChild( element );
@@ -107,7 +145,7 @@ function createDiv( divID, containerElement ) {
 function createContainerDiv( divID ) {
     
     // Creates the div element and gives it an id attribute
-    var element = document.createElement( "DIV" );
+    var element = document.createElement( "FORM" );
     element.setAttribute( "id", divID );
     
     // Adds the element to the page body
@@ -130,114 +168,133 @@ function createHeading( headID, divID, headText, headNum ) {
     divElement.appendChild( element );
     
 }
-// ENDS CREATE ELEMENT FUNCTIONS
 
-// BEGINS DISPLAY HERO IMAGES
-// Function to display the options for DC heroes
-function displayDCHeroes( heroArray ) {
-    
-    // Calls CREATE FUNCTION to create heading
-    createHeading( "heroSelection", "stage2", "Favorite DC Hero?", "H2" );
-    
-    // Creates the Batman image
-    createImage( "batmanImage", heroArray[0].pathLeft, "displayDCVillains( 'Batman' )", "heroChoices", "stage2" ); 
-    
-    // Creates the Superman image
-    createImage( "supermanImage", "assets/images/dcHeroes/supermanLogo.png", "displayDCVillains( 'Superman' )", "heroChoices", "stage2" ); 
-    
-    // Creates the Green Arrow image
-    createImage( "greenArrowImage", "assets/images/dcHeroes/greenArrowLogo.png", "displayDCVillains( 'Green Arrow' )", "heroChoices", "stage2" ); 
-    
-    // Creates the Flash image
-    createImage( "flashImage", "assets/images/dcHeroes/flashLogo.png", "displayDCVillains( 'Flash' )", "heroChoices", "stage2" ); 
+// Function to create a select list with the ID, div ID, JSON array, and onchange function passed in
+function createSelect( selectID, selectDiv, selectArray, selectFunction ) {
 
-}
+    // Gets the div that it will be added to
+    var divElement = document.getElementById( selectDiv );
 
-function displayMarvelHeroes() {
-    
-    createHeading( "heroSelection", "stage2", "Favorite Marvel Hero?", "H2" );
-    
-    // Creates the Spider-Man image
-    createImage( "spiderImage", "assets/images/marvelHeroes/spiderLogo.png", "selectSpider()", "heroChoices", "stage2" ); 
-    
-    // Creates the Deadpool image
-    createImage( "deadpoolImage", "assets/images/marvelHeroes/deadpoolLogo.png", "selectDeadpool()", "heroChoices", "stage2" ); 
-    
-    // Creates the Hulk image
-    createImage( "hulkImage", "assets/images/marvelHeroes/hulkLogo.png", "selectHulk()", "heroChoices", "stage2" ); 
-    
-    // Creates the Wolverine image
-    createImage( "wolverineImage", "assets/images/marvelHeroes/wolverineLogo.png", "selectWolverine()", "heroChoices", "stage2" ); 
-    
-}
-// ENDS DISPLAY HERO IMAGES
+    // Creates the select list and gives it an ID
+    var element = document.createElement( "select" );
+    element.setAttribute( "id", selectID );
+    element.setAttribute( "onchange", selectFunction );
 
-// BEGINS DISPLAY VILLAIN IMAGES 
-function displayDCVillains( dcHero ) {
-    
-    createHeading( "villainSelection", "stage3", "Favorite " + dcHero + " Villain?", "H3" );
-    
-    if ( dcHero == "Batman" ) {
-        
-        var villainA = "jokerImage";
-        var villainAPath = "batmanVillains/jokerPic.png";
-        
-        var villainB = "penguinImage";
-        var villainBPath = "batmanVillains/penguinPic.png";
-        
-        var villainC = "scarecrowImage";
-        var villainCPath = "batmanVillains/scarecrowPic.png";
-        
-    } else if ( dcHero == "Superman" ) {
-        
-        var villainA = "lexImage";
-        var villainAPath = "supermanVillains/lexPic.png";
-        
-        var villainB = "doomsdayImage";
-        var villainBPath = "supermanVillains/doomsdayPic.png";
-        
-        var villainC = "darkseidImage";
-        var villainCPath = "supermanVillains/darkseidPic.png";
-        
-    } else if ( dcHero == "Green Arrow" ) {
-        
-        var villainA = "deathstrokeImage";
-        var villainAPath = "greenArrowVillains/deathstrokePic.png";
-        
-        var villainB = "merlynImage";
-        var villainBPath = "greenArrowVillains/merlynPic.png";
-        
-        var villainC = "komodoImage";
-        var villainCPath = "greenArrowVillains/komodoPic.png";
-        
-    } else if ( dcHero == "Flash" ) {
-        
-        var villainA = "zoomImage";
-        var villainAPath = "flashVillains/zoomPic.png";
-        
-        var villainB = "groddImage";
-        var villainBPath = "flashVillains/groddPic.png";
-        
-        var villainC = "captainColdImage";
-        var villainCPath = "flashVillains/captainColdPic.png";
-        
+    var defaultElement = document.createElement( "option" );
+    if ( selectID == "topList" ) {
+        defaultElement.appendChild( document.createTextNode( messageList[0].topSelectMessage ) );
+    } else if ( selectID == "midList" ) {
+        defaultElement.appendChild( document.createTextNode( messageList[0].midSelectMessage ) );
+    } else if ( selectID == "botList" ) {
+        defaultElement.appendChild( document.createTextNode( messageList[0].botSelectMessage ) );
     }
-    
-    
-    // Creates the first villain image
-    createImage( villainA, "assets/images/dcVillains/" + villainAPath, "", "villainChoices", "stage3" ); 
-    
-    // Creates the second vilain image
-    createImage( villainB, "assets/images/dcVillains/" + villainBPath, "", "villainChoices", "stage3" ); 
-    
-    // Creates the third villain image
-    createImage( villainC, "assets/images/dcVillains/" + villainCPath, "", "villainChoices", "stage3" );  
-    
+
+    element.appendChild( defaultElement );
+
+    // Loops through the array and creates an option for each
+    for ( var i = 0; i < selectArray.length; i++ ) {
+        
+        var optionElement = document.createElement( "option" );
+        optionElement.setAttribute( "value", selectArray[i].text );
+        optionElement.appendChild( document.createTextNode( selectArray[i].text ) );
+        element.appendChild( optionElement );
+
+    }
+
+    // Adds the element to the div
+    divElement.appendChild( element );
+
 }
-// ENDS DISPLAY VILLAIN IMAGES
+
+// Function to display the options for DC heroes
+function displayMidOptions( selection ) {
+
+    createDiv( "midSelection", document.getElementById( "container" ) );
+
+    // Calls CREATE FUNCTION to create heading
+    createHeading( "heroSelection", "midSelection", messageList[0].midMessage, "H2" );
+
+    if ( selection == "left" ) {
+        dataArray = midRightData;
+    } else if ( selection == "right" ) {
+        dataArray = midLeftData;
+    }
+
+    for (var i = 0; i < dataArray.length; i++) {
+        createImage( dataArray[i].midID, dataArray[i].midPath, "heroChoices", "midSelection" );
+    }
+
+    // Creates a div for the select list
+    createDiv( "midSelectionList", document.getElementById( "container" ) );
+
+    currentArray = dataArray;
+    currentDirection = selection;
+
+    createSelect( "midList", "midSelectionList", dataArray, "selectMidOption()" );
+
+}
+
+function displayBotOptions( selection ) {
+
+    createDiv( "botSelection", document.getElementById( "container" ) );
+
+    // Calls CREATE FUNCTION to create heading
+    createHeading( "villainSelection", "botSelection", messageList[0].botMessage, "H2" );
+
+    if ( currentDirection == "left" ) {
+
+        if ( selection == "A" ) {
+            currentArray = botRightAData;
+        } else if ( selection == "B" ) {
+            currentArray = botRightBData;
+        } else if ( selection == "C" ) {
+            currentArray = botRightCData;
+        } else if ( selection == "D" ) {
+            currentArray = botRightDData;
+        }
+
+    } else if ( currentDirection == "right" ) {
+
+        if ( selection == "A" ) {
+            currentArray = botLeftAData;
+        } else if ( selection == "B" ) {
+            currentArray = botLeftBData;
+        } else if ( selection == "C" ) {
+            currentArray = botLeftCData;
+        } else if ( selection == "D" ) {
+            currentArray = botLeftDData;
+        }
+
+    }
+
+    for ( var i = 0; i < currentArray.length; i++ ) {
+
+        createImage( "null", currentArray[i].botPath, "villainChoices", "botSelection" );
+
+    }
+
+    // Creates a div for the select list
+    createDiv( "botSelectionList", document.getElementById( "container" ) );
+    createSelect( "botList", "botSelectionList", currentArray, "selectBotOption()" );
+
+}
+
+function displayFinal( FORM ) {
+
+    var topChoice = document.getElementById("topList").value;
+    var midChoice = document.getElementById("midList").value;
+    var botChoice = document.getElementById("botList").value;
+
+    createHeading( "null", "topMessage", topChoice, "H2" );
+    createHeading( "null", "midMessage", midChoice, "H2" );
+    createHeading( "null", "botMessage", botChoice, "H2" );
+
+    return false;
+
+}
 
 // BEGINS ANIMATION FUNCTIONS
-function moveComic( direction, inputMarvel, inputDC ) { 
+function moveComic( direction, inputRight, inputLeft ) { 
     
     var moveCounter = 0;
     
@@ -250,20 +307,20 @@ function moveComic( direction, inputMarvel, inputDC ) {
   
     function frame() {
     
-        if ( moveDirectionA < ( windowHalf - 255 ) ) { 
+        if ( moveDirectionA < ( windowHalf ) ) { 
                   
-            moveDirectionA = moveDirectionA + 3;
-            moveDirectionB = moveDirectionB - 3 ;
+            moveDirectionA = moveDirectionA + 6;
+            moveDirectionB = moveDirectionB - 6 ;
             
             if ( direction == "right" ) {
             
-                inputMarvel.style.marginRight = moveDirectionB + "px"; 
-                inputDC.style.marginRight = moveDirectionA + "px"; 
+                inputRight.style.marginRight = moveDirectionB + "px"; 
+                inputLeft.style.marginRight = moveDirectionA + "px"; 
             
             } else if ( direction == "left" ) {
                 
-                inputMarvel.style.marginLeft = moveDirectionA + "px"; 
-                inputDC.style.marginLeft = moveDirectionB + "px";
+                inputRight.style.marginLeft = moveDirectionA + "px"; 
+                inputLeft.style.marginLeft = moveDirectionB + "px";
                 
             }
                 
@@ -278,13 +335,13 @@ function moveComic( direction, inputMarvel, inputDC ) {
             
             if ( direction == "right" ) {
             
-                inputMarvel.style.marginRight = moveDirectionB + "px"; 
-                inputDC.style.marginRight = moveFinal + "px"; 
+                inputRight.style.marginRight = moveDirectionB + "px"; 
+                inputLeft.style.marginRight = moveFinal + "px"; 
             
             } else if ( direction == "left" ) {
                 
-                inputMarvel.style.marginLeft = moveFinal + "px"; 
-                inputDC.style.marginLeft = moveDirectionB + "px";
+                inputRight.style.marginLeft = moveFinal + "px"; 
+                inputLeft.style.marginLeft = moveDirectionB + "px";
                 
             }
 
