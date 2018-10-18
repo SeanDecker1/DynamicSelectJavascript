@@ -1,4 +1,5 @@
-#container {
+/* Sean Decker - Style Sheet */
+#container, #nameForm {
     
     text-align: center;
     overflow: hidden;
@@ -16,7 +17,7 @@
     
 }
 
-.heroChoices {
+.midChoices {
     
     height: 100px;
     width: 150px;
@@ -29,7 +30,7 @@
     
 }
 
-.villainChoices {
+.botChoices {
     
     height: 100px;
     width: 100px;

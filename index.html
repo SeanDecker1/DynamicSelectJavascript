@@ -1,7 +1,9 @@
+<!-- Sean Decker - Barebones HTML Page -->
 <!DOCTYPE html>
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+        <title>Client Programming Project 1</title> 
     </head>
     <body>
          
@@ -12,4 +14,31 @@
         <script src="assets/js/script.js"></script>
 
     </body>
+
+    <script>
+        
+        // Site works successfully with all browsers
+
+        var sBrowser, sUsrAg = navigator.userAgent;
+        
+        if (sUsrAg.indexOf("Firefox") > -1) {
+                sBrowser = "Mozilla Firefox";
+        } else if (sUsrAg.indexOf("Opera") > -1) {
+                sBrowser = "Opera";
+        } else if (sUsrAg.indexOf("Trident") > -1) {
+                sBrowser = "Microsoft Internet Explorer";
+        } else if (sUsrAg.indexOf("Edge") > -1) {
+                sBrowser = "Microsoft Edge";
+        } else if (sUsrAg.indexOf("Chrome") > -1) {
+            sBrowser = "Google Chrome or Chromium";
+        } else if (sUsrAg.indexOf("Safari") > -1) {
+            sBrowser = "Apple Safari";
+        } else if (sUsrAg.indexOf("MSIE") > -1) {
+            sBrowser = "MS IE";
+        } else {
+            sBrowser = "unknown";
+        }
+        
+    </script>
+
 </html>
